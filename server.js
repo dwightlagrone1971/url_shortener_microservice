@@ -1,7 +1,10 @@
 var express = require('express');
 var path = require('path');
 var mongo = require('mongodb').MongoClient;
-var validUrl = require('valid-url');
+require('dotenv').config({
+  silent: true
+});
+
 // set instance of express
 var app = express();
 // set port 
@@ -21,42 +24,45 @@ mongo.connect(urldb, function(err, db) {
   app.use(express.static(path.join(__dirname, 'views')));
   app.set('view engine', 'ejs');
   // set route for home page
+  
+  var baseUrl;
+  var shortyUrl;
+  
   app.get('/', function(req, res) {
+    
     res.render('home');
+    baseUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    console.log("This is the base url: " + baseUrl);
+    
   });
-  // set route for shortener url
-  app.get('/:url', function(req, res) {
-    res.send("This is for the short URL redirect");
-  });
   
-  app.get('/new/:url*', function(req, res) {
   
-  var url = req.params['url'] + req.params[0];
   
-  console.log("User input url: " + url);
+  app.get('/orig/:url*', function(req, res) {
   
-  checkForUrl(url);
+    var url = req.params['url'] + req.params[0];
+  
+    checkForUrl(url);
   
     function checkForUrl(checkUrl) {
       
-      console.log("This is inside the check for url function: " + url);  
-      
       var sites = db.collection('sites');
       sites.find(
-        {
-        "longUrl" : checkUrl
-        }, {
-          "longUrl" : 1,
-          "shortUrl" : 1,
-          "_id" : 0
+      {
+        "orginal_url" : checkUrl
+      }, {
+        "orginal_url" : 1,
+        "shortUrl" : 1,
+        "_id" : 0
       }).toArray(function(err, data) {
         if (err) throw err;
-        if (data.length > 0) {
-          data = data[0];
-          res.send(data);
-        } else {
-          validateUrl(checkUrl);
-        }
+          if (data.length > 0) {
+            data = data[0];
+            res.send(data);
+            shortyUrl = data.shortUrl;
+          } else {
+            validateUrl(checkUrl);
+          }
       });
     }
     // check if url is valid: stack overflow - kavitha Reddy
@@ -66,10 +72,10 @@ mongo.connect(urldb, function(err, db) {
         if(!regex .test(valUrl)) {
           console.log("Please enter valid URL!!");
         } else {
-          console.log("Great, the url is valid!" + valUrl);
+          console.log("Great, the url is valid! " + valUrl);
           makeShortUrl(valUrl);
         }
-    } 
+    }
     // make short url: stack overflow - SteveP
     function makeShortUrl() {
       
@@ -81,37 +87,53 @@ mongo.connect(urldb, function(err, db) {
       
       var shortUrl = "https://www." + text + ".com";
       
-      console.log(shortUrl);
+      console.log("This is the short url: " + shortUrl);
       
       insertObj(url, shortUrl);
       
     }
     // create object longUrl and shortUrl
     function insertObj(orgUrl, shortUrl) {
-      console.log("This is inside the create object function");
-      console.log("longUrl: " + url + " " + "shortUrl: " + shortUrl);
       var sites = db.collection('sites');
       sites.insert({
-        "shortUrl": shortUrl,
+        "shortUrl": "http://camper-api-project-dlagrone1971.c9users.io/short/" + shortUrl,
         "orginal_url" : orgUrl
       }, function(err, data) {
         if(err) throw err;
-        if(data.length > 0) {
-          data = data[0];
-          console.log("Object save was a success! " + data.length);
-        } else {
-          console.log("Object did not save!! " + data.length);
-        }
+        console.log("The object saved in the database");
+        checkForUrl(orgUrl);
       });
-    }  
- 
-
-    
-    
-    
+    } 
+      
+      
   }); // end of app.get('/new/:url*'
 
-  
+  // set route for shortener url
+  app.get('/:url*', function(req, res) {
+    
+    var url = req.params['url'] + req.params[0];
+    var fullUrl = "http://camper-api-project-dlagrone1971.c9users.io/" + url;
+    
+    console.log("this is in the short route: " + fullUrl);
+    
+    var sites = db.collection('sites');
+    sites.find(
+      {
+        "shortUrl" : fullUrl
+      }).toArray(function(err, data) {
+        if(err) throw err;
+          if(data.length > 0) {
+          data = data[0];
+          console.log("Found: " + data.shortUrl);
+          ("Redirecting to: " + data.orginal_url);
+          res.redirect(data.orginal_url);
+        } else {
+          res.send("There was a problem with you data search!!");
+        }
+      });
+    
+    
+  });
   
   
 }); // end of mongodb connection

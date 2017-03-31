@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+         
+        <% include partials/head.ejs %>   
+        
+    </head>    
+    <body>
+        
+        <div id="main" style="padding-left: 25px">
+            <h1>FreeCodeCamp API Basejump: URL Shortener Microservice</h1>
+            <h2>User Stories:</h2>
+            <ul>
+                <li>I can pass url as a parameter and I will receive a shortened URL in the JSON resonse.</li>
+                <li>When I visit the shortened URL, it will redirect me to my orginal link.</li>
+            </ul>
+            
+            <h2>Example creation usage:</h2>
+            <ul>
+                <li style="background-color: rgba(255,0,0,0.4); width: 390px; font-size: 15px">https://cdl-url.herokuapp.com/new/https://www.google.com</li>
+                <br>
+                <li style="background-color: rgba(255,0,0,0.4); width: 340px; font-size: 15px">https://cdl-url.herokuapp.com/new/http://foo.com:80</li>
+                    
+            </ul>
+            
+            <h2>Example creation output</h2>
+            <h3 style="background-color: rgba(255,0,0,0.4); width: 750px; font-size: 20px">{ "original_url":"http://foo.com:80", "short_url":"https://little-url.herokuapp.com/8170" }</h3>
+            
+            <h2>Usage:</h2>
+            <h3 style="background-color: rgba(255,0,0,0.4); width: 325px; font-size: 20px">https://little-url.herokuapp.com/2871</h3>
+            
+            <h2>Will redirect to:</h2>
+            <h3 style="background-color: rgba(255,0,0,0.4); width: 225px; font-size: 20px">https://www.google.com/</h3>
+        </div>
+        
+        <% include partials/scripts.ejs %>  
+
+    </body>
+</html>
+

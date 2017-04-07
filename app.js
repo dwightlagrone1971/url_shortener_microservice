@@ -12,7 +12,7 @@ var port = process.env.PORT;
 // set database connection variable
 var urldb = "mongodb://localhost:27017/shortner";
 // connect to the database
-mongo.connect(urldb, function(err, db) {
+mongo.connect(process.env.MONGOLAB_URI || urldb, function(err, db) {
   
   if (err) {
     console.log("Connection was NOT successful!!");

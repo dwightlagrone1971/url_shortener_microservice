@@ -21,22 +21,13 @@ mongo.connect(urldb, function(err, db) {
   }
   
   // set path and view engine for ejs files
-  app.use(express.static(path.join(__dirname, 'views')));
+  app.use(express.static(path.join(__dirname, 'public')));
   app.set('view engine', 'ejs');
   // set route for home page
   
-  var baseUrl;
-  var shortyUrl;
-  
   app.get('/', function(req, res) {
-    
     res.render('home');
-    baseUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-    console.log("This is the base url: " + baseUrl);
-    
   });
-  
-  
   
   app.get('/orig/:url*', function(req, res) {
   
@@ -59,7 +50,7 @@ mongo.connect(urldb, function(err, db) {
           if (data.length > 0) {
             data = data[0];
             res.send(data);
-            shortyUrl = data.shortUrl;
+            var shortyUrl = data.shortUrl;
           } else {
             validateUrl(checkUrl);
           }
@@ -86,8 +77,6 @@ mongo.connect(urldb, function(err, db) {
         text += charset.charAt(Math.floor(Math.random() * charset.length));
       
       var shortUrl = "https://www." + text + ".com";
-      
-      console.log("This is the short url: " + shortUrl);
       
       insertObj(url, shortUrl);
       
@@ -121,8 +110,8 @@ mongo.connect(urldb, function(err, db) {
       {
         "shortUrl" : fullUrl
       }).toArray(function(err, data) {
-        if(err) throw err;
-          if(data.length > 0) {
+        if (err) throw err;
+        if(data.length > 0) {
           data = data[0];
           console.log("Found: " + data.shortUrl);
           ("Redirecting to: " + data.orginal_url);

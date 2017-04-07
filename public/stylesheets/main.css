@@ -1,0 +1,40 @@
+body {
+  background-image: url('/images/bluewood.jpg');
+  
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+.container {
+  background: rgba(255, 255, 255, 0.7);
+  border: 14px ridge #4F628E;
+  text-align: center;
+  margin-top: 100px;
+}
+.example {
+  background-color: rgba(255,0,0,0.4);
+  display:inline-block;
+  font-size: 18px;
+}
+.usage {
+  background-color: rgba(255,0,0,0.4);
+  display:inline-block;
+  font-size: 18px;
+}
+.user {
+  display:inline-block;
+  font-size: 16px;
+}
+#main {
+  text-align: left;
+  padding-bottom: 20px;
+}
+#title {
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+a {
+  color: #00B7FF;
+}
+br {
+  padding: 10px;
+}
+

@@ -7,7 +7,7 @@ var app = express();
 // set port 
 var port = process.env.PORT || 8080;
 // set database connection variable
-var urldb = "mongodb://localhost:27017/shortner";
+// var urldb = "mongodb://localhost:27017/shortner";
 var monLab = "mongodb://dlagrone01:bear1971@ds159050.mlab.com:59050/shortner";
 // connect to the database
 mongo.connect(monLab, function(err, db) {
@@ -113,7 +113,7 @@ mongo.connect(monLab, function(err, db) {
           ("Redirecting to: " + data.orginal_url);
           res.redirect(data.orginal_url);
         } else {
-          res.send("There was a problem with you data search!!");
+          res.send("The url is not found in the database!!");
         }
       });
     

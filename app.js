@@ -103,8 +103,6 @@ mongo.connect(process.env.MONGOLAB_URI || urldb, function(err, db) {
     var url = req.params['url'] + req.params[0];
     var fullUrl = "http://camper-api-project-dlagrone1971.c9users.io/" + url;
     
-    console.log("this is in the short route: " + fullUrl);
-    
     var sites = db.collection('sites');
     sites.find(
       {
